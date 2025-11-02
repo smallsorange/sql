@@ -7,7 +7,7 @@ select
 from play_log as p 
     left join user_info as u on p.user_id=u.user_id
     left join song_info as s on p.song_id=s.song_id
-where u.age between 18 and 25 and year(fdate)=2022 
+where u.age between 18 and 25 and year(fdate)='2022' 
 and singer_name='周杰伦'
 group by month(fdate),song_name,p.song_id
 ) as t
