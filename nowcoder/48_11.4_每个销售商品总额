@@ -1,0 +1,10 @@
+with sales as (select name as product_name,sum(quantity) as total,category,p.product_id
+from products as p join orders as o on p.product_id=o.product_id
+group by name,category,product_id
+)
+select product_name,total as total_sales,row_number() over (partition by category order by total desc) as category_rank
+from sales 
+order by category asc,total_sales desc,product_id
+
+1.sales 计算出total group by name
+2.row_number(partition by category order by total desc)
