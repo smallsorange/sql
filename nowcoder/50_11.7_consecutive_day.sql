@@ -22,3 +22,5 @@ order by user_id
 -- 3.numbered row_number() 按照日期排序
 -- 4.grouped group by date_sub login_date,interval rn day 按照 计算登录login_date,和rn 差值的天数 就会差1 2 3
 -- count(login_date-rn)  出现的次数 大于3 说明连续登录了三天
+-- 核心：row_number () over partition by user order by login_date
+-- date_sub(login_date,interval rn day)
