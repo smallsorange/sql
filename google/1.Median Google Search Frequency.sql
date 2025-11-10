@@ -1,0 +1,14 @@
+-- Median google search frequency
+-- Write a query to report the median of searches made by a user. Round the median to one decimal point.
+-- 写一个查询，用户搜索的中位数，1位小数
+-- search_frequency Table:
+-- Column Name	Type
+-- searches	integer
+-- num_users	integer
+
+-- search_frequency Example Input:
+-- searches	num_users
+-- 1	2
+-- 2	2
+-- 3	3
+-- 4	1
