@@ -1,13 +1,20 @@
-1.找到首次注册的日期
-  select min(date) as reg_date，count() 人数
-  from user_tb
-  group by user_id
-2.计算7日有多少人
-  select 
-  from 
-  where date_sub(date,interval 7 day) = reg_date
-3.select 
-  from 
+-- 1.找到首次注册的日期
+--   select user_id,min(date) as reg_date，count() 人数
+--   from user_tb
+--   group by user_id
+-- 2.计算7日有多少人
+--   ,d7_login as (
+--   select distinct user_id,reg_date
+--   from reg_date join user_event on user_id
+--   where date_sub(event_date,reg_date) >=7
+-- 3.select install_date,count(distinct reg_user_id) as new_users
+--   count(d7login) d7 retain_users
+--   retain_users / new_users
+--   from reg_date left join d7_login on user_id
+--   group by reg_date
+--   order by reg_date
+
+
 WITH first_day AS (
     -- 把新增用户的注册日期抽出来
     SELECT
@@ -43,7 +50,8 @@ ORDER BY
 
 
 
--- 最长连续登录天数
+
+-- 查询连续登录 where consecutive_days >= 3
 with login_dates as (
     select user_id,date(log_time) as login_date
     from login_tb
@@ -65,3 +73,31 @@ order by user_id
 -- 2.date row_number() over (partition by user_id,order by date) rk
 -- 3.count(*) as consecutive_day(出现几个就相当于连续几天) group by date_sub(date,interval rk day) 有的差1天，有的差3天分组
 -- 4.select where consecutive_day >= 3
+
+
+
+
+  
+-- 最长连续登录 max
+#1.筛选范围并排序
+with order_logins as (
+    select user_id,fdate,row_number() over (partition by user_id order by fdate) rn
+    from tb_dau
+    where year(fdate)='2023' and month(fdate)='1' 
+),
+#2.找到连续的值
+group_login as (
+    select user_id,fdate,rn,date_sub(fdate,interval rn day) as grp 
+    from order_logins 
+),
+consecutive as (
+    select user_id,grp,count(*) as consec_days
+    from group_login
+    group by user_id,grp
+)
+select user_id,max(consec_days) as max_consec_days from consecutive
+group by user_id
+-- 1.row_number() order by date rn
+-- 2.date_sub(fdate,interval rn day) grp 找到相同的连续值
+-- 3.consecutive group by user_id,grp count() consec_days
+-- 4.select max() consec_days group by id
