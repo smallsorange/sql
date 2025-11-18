@@ -29,10 +29,25 @@ PARTITION BY 是窗口函数的分组：
 常用于排序、排名、加总、移动平均等
 
 # 常用的窗口函数有哪些
-
+排名：row_number() rank() dense_rank()   聚合类：sum() over count() over avg() over max() over min() over 窗口偏移：lag()取前一行的值 lead()取后一行的值
 # 时间相关的格式
 date timestampdiff datediff date_sub date_add month year date_format
+DATE()：从 datetime 中提取日期部分。
+DATEDIFF(date1, date2)：date1 - date2 的天数差。
+TIMESTAMPDIFF(unit, t1, t2)：按 unit（hour, minute, day）计算差值，更灵活。
+DATE_SUB(date, INTERVAL n DAY)：日期往前推 n 天。
+DATE_ADD(date, INTERVAL n DAY)：日期往后推 n 天。
+MONTH(date)：提取月份（1–12）。
+YEAR(date)：提取年份（如 2025）。
+DATE_FORMAT(date, '%Y-%m')：格式化日期为指定格式，例如转成 “2025-01”。
 
 # cast round
+CAST 用于类型转换：
+CAST(x AS SIGNED)：转为整数
+CAST(x AS CHAR)：转字符串
+CAST(x AS DECIMAL(10,2))：转为两位小数
+常用于时间戳 → 日期、字符串 → 数字、浮点数精度控制。
 
+ROUND(x, d) 用于四舍五入：
 # sql运行逻辑
+FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY → LIMIT
