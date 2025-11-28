@@ -1,0 +1,21 @@
+select product_id,count(product_id)
+from (
+    select *,substring_index(order_id,"_",-1) as product_id
+    from order_log 
+) t
+group by product_id
+
+#保留_后面的座位product_id
+substring_index(order_id,"_",-1) as product_id
+
+#保留后缀，split切割
+order_id = "A_B_C"
+suffix = order_id.split("_")[-1]
+print(suffix)  # 输出 C
+
+#re保留后面的 python import re
+re.sub(r'.*_', '', s) 删除最后一个_保留后面的内容
+abc_xyz_123 → 123
+#re保留前面的
+re.sub(r'_[^_]*$', '', s)
+abc_xyz_123 → abc_xyz
