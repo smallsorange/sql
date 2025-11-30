@@ -1,18 +1,20 @@
-with t as(
-SELECT staff_gender,department,normal_salary-dock_salary as salary 
-FROM staff_tb as st INNER JOIN salary_tb as sa ON st.staff_id=sa.staff_id
+with shifa_tb as (
+    select staff_name,staff_gender,department,normal_salary-dock_salary salary
+from staff_tb st join salary_tb sa on st.staff_id=sa.staff_id
 )
-SELECT department,
-ROUND(AVG(salary),2) as average_actual_salary,
-IFNULL(ROUND(AVG(IF(staff_gender='male',salary,NULL)),2),0.00) as average_actual_salary_male,
-IFNULL(ROUND(AVG(IF(staff_gender='female',salary,NULL)),2),0.00) as average_actual_salary_female 
-FROM t 
-GROUP BY department ORDER BY average_actual_salary DESC
+select department,round(avg(salary),2) as average_actual_salary,
+IFNULL(round(avg(if(staff_gender='male',salary,null)),2),0) as average_actual_salary_male
+,
+IFNULL(round(avg(if(staff_gender='female',salary,null)),2),0) as average_actual_salary_female
+from shifa_tb
+group by department
+order by average_actual_salary desc
 
-1.join table
-2.select salary
-3.group by department
-4.avg,ifnull if staff_gender='male' salary null
+# ifnull(round(avg(if(staff_gender='male',salary,null)),2),0)
+# if round(avg(if(staff_gender='male',salary,null)),2) is null 
+# print 0
+# if(staff_gender='male',salary,null))
+# if gender=male salary else null
 
 -- ROUND(
 --     COALESCE(
