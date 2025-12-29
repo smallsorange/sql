@@ -14,3 +14,6 @@ limit 3
 -- # 4.count,avg,sum(timestampdiff)
 -- # 5.from 子查询
 -- # 6.where 
+1.连接表 join 
+2.where筛选条件 release_date<=7
+3.
