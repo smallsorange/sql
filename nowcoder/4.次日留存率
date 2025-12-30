@@ -1,0 +1,48 @@
+1.用户首次登录月份 min
+2.用户每个月登录去重复 distinct
+3.month_login left join first_login 
+condition: AND m.month = DATE_FORMAT(
+           DATE_ADD(CONCAT(f.first_month, '-01'), INTERVAL 1 MONTH),
+            '%Y-%m'
+       )
+WITH first_login AS (
+    -- 1️⃣ 每个用户的首次登录月份（定义“新增月”）
+    SELECT
+        user_id,
+        DATE_FORMAT(MIN(login_date), '%Y-%m') AS first_month
+    FROM login_tb
+    GROUP BY user_id
+),
+
+month_login AS (
+    -- 2️⃣ 用户-月份 登录明细（去重）
+    SELECT DISTINCT
+        user_id,
+        DATE_FORMAT(login_date, '%Y-%m') AS month
+    FROM login_tb
+),
+
+new_user_retention AS (
+    -- 3️⃣ 新增用户在次月是否登录
+    SELECT
+        f.first_month AS new_month,
+        COUNT(DISTINCT f.user_id)  AS new_users,
+        COUNT(DISTINCT m.user_id)  AS retained_users
+    FROM first_login f
+    LEFT JOIN month_login m
+        ON f.user_id = m.user_id
+       AND m.month = DATE_FORMAT(
+            DATE_ADD(CONCAT(f.first_month, '-01'), INTERVAL 1 MONTH),
+            '%Y-%m'
+       )
+    WHERE f.first_month BETWEEN '2023-01' AND '2023-12'
+    GROUP BY f.first_month
+)
+
+SELECT
+    new_month,
+    new_users,
+    retained_users,
+    ROUND(retained_users / new_users, 4) AS next_month_retention_rate
+FROM new_user_retention
+ORDER BY new_month;
